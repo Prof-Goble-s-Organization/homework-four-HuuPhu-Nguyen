@@ -23,8 +23,7 @@ public class No8Tests {
 
 	@Test
 	public void testAddNewNodeAsLeftChildOfRoot() {
-		CS232LinkedBinaryTree<String, String> t = new CS232LinkedBinaryTree<String, String>(
-				"A", "1");
+		CS232LinkedBinaryTree<String, String> t = new CS232LinkedBinaryTree<String, String>("A", "1");
 		t.add("B", "2");
 
 		assertEquals("Incorrect size", 2, t.size());

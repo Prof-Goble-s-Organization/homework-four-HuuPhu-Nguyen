@@ -129,10 +129,20 @@ public class CS232LinkedBinaryTree<K, V> implements CS232BinaryTree<K, V> {
 	 *            the tree that should appear as the right child of the new
 	 *            tree.
 	 */
-	public CS232LinkedBinaryTree(CS232LinkedBinaryTree<K, V> leftSubTree,
-			K key, V value, CS232LinkedBinaryTree<K, V> rightSubTree) {
+	public CS232LinkedBinaryTree(CS232LinkedBinaryTree<K, V> leftSubTree, K key, V value, CS232LinkedBinaryTree<K, V> rightSubTree) {
 		// Intentionally not implemented - see homework assignment.
-		throw new UnsupportedOperationException("Not yet implemented");
+		this.root= new BTNode<>(key, value);
+		this.size+=1;
+		if (leftSubTree.size != 0) {
+			this.root.left = leftSubTree.root;
+			leftSubTree.root.parent= this.root;
+			this.size+=leftSubTree.size;
+		}
+		if (rightSubTree.size != 0) {
+			this.root.right = rightSubTree.root;
+			rightSubTree.root.parent= this.root;
+			this.size+=rightSubTree.size;
+		}
 	}
 
 	/**
@@ -147,8 +157,15 @@ public class CS232LinkedBinaryTree<K, V> implements CS232BinaryTree<K, V> {
 	 */
 	public boolean contains(K key) {
 		// Intentionally not implemented - see homework assignment.
-		throw new UnsupportedOperationException("Not yet implemented");
+		return this.subtreeContains (key, this.root);
 	}
+
+	public boolean subtreeContains (K key, BTNode<K, V> subTreeRoot) {
+		// Intentionally not implemented - see homework assignment.
+
+		// Uses pre-order traversal; swapping statements around the OR operator allows for other traversal orders.
+		return subTreeRoot.key.equals(key) || (subTreeRoot.left != null && this.subtreeContains (key, subTreeRoot.left)) || (subTreeRoot.right != null && this.subtreeContains (key, subTreeRoot.right));
+    }
 
 	/**
 	 * {@inheritDoc}
@@ -196,7 +213,33 @@ public class CS232LinkedBinaryTree<K, V> implements CS232BinaryTree<K, V> {
 	 */
 	public void add(K key, V value) {
 		// Intentionally not implemented - see homework assignment.
-		throw new UnsupportedOperationException("Not yet implemented");
+		Queue<BTNode<K, V>> nodeQ = new LinkedList<BTNode<K, V>>();
+		BTNode<K, V> addNode = new BTNode<>(key, value);
+
+		if(this.root == null){
+			this.root=addNode;
+			this.size+=1;
+		}
+		else{
+			nodeQ.add(root);
+			while (!nodeQ.isEmpty()) {
+				BTNode<K, V> curr = nodeQ.remove();
+				if (curr.left == null) {
+					curr.left = addNode;
+					addNode.parent = curr;
+					this.size += 1;
+					break;
+				}
+				nodeQ.add(curr.left);
+				if (curr.right == null) {
+					curr.right = addNode;
+					addNode.parent = curr;
+					this.size += 1;
+					break;
+				}
+				nodeQ.add(curr.right);
+			}
+		}
 		
 		/*
 		 * HINT: Use a queue to perform a level order traversal of the tree until a
@@ -297,7 +340,15 @@ public class CS232LinkedBinaryTree<K, V> implements CS232BinaryTree<K, V> {
 	 */
 	public void visitInOrder(CS232Visitor<K, V> visitor) {
 		// Intentionally not implemented - see homework assignment.
-		throw new UnsupportedOperationException("Not yet implemented");
+		this.subTreeVisitInOrder(root, visitor);
+	}
+
+	private void subTreeVisitInOrder(BTNode<K, V> subTreeRoot, CS232Visitor<K, V> visitor) {
+		if (subTreeRoot != null) {
+			subTreeVisitInOrder(subTreeRoot.left, visitor);
+			visitor.visit(subTreeRoot.key, subTreeRoot.value);
+			subTreeVisitInOrder(subTreeRoot.right, visitor);
+		}
 	}
 
 	/**
@@ -355,7 +406,26 @@ public class CS232LinkedBinaryTree<K, V> implements CS232BinaryTree<K, V> {
 	 */
 	public int countLeafNodes() {
 		// Intentionally not implemented - see homework assignment.
-		throw new UnsupportedOperationException("Not yet implemented");
+		int leaves = 0;
+		Queue<BTNode<K, V>> nodeQ = new LinkedList<>();
+		if (this.size == 0) {
+			return leaves;
+
+		}
+		nodeQ.add(root);
+		while (!nodeQ.isEmpty()) {
+			BTNode<K, V> curr = nodeQ.remove();
+			if(curr.isLeaf()){
+				leaves+=1;
+			}
+			if(curr.left != null){
+				nodeQ.add(curr.left);
+			}
+			if(curr.right != null){
+				nodeQ.add(curr.right);
+			}
+		}
+		return leaves;
 	}
 
 	/*
