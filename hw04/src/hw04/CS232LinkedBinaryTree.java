@@ -157,6 +157,9 @@ public class CS232LinkedBinaryTree<K, V> implements CS232BinaryTree<K, V> {
 	 */
 	public boolean contains(K key) {
 		// Intentionally not implemented - see homework assignment.
+		if(this.size==0){
+			return false;
+		}
 		return this.subtreeContains (key, this.root);
 	}
 
