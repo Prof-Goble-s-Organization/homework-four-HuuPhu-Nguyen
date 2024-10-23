@@ -413,13 +413,13 @@ public class CS232LinkedBinaryTree<K, V> implements CS232BinaryTree<K, V> {
 		Queue<BTNode<K, V>> nodeQ = new LinkedList<>();
 		if (this.size == 0) {
 			return leaves;
-
 		}
 		nodeQ.add(root);
 		while (!nodeQ.isEmpty()) {
 			BTNode<K, V> curr = nodeQ.remove();
 			if(curr.isLeaf()){
 				leaves+=1;
+				continue;
 			}
 			if(curr.left != null){
 				nodeQ.add(curr.left);
